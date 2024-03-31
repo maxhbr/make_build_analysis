@@ -4,23 +4,25 @@ this repo tries to find a way to statically or dynamically analyze builds done w
 
 ** Analysis via strace
 *** [[https://github.com/nexB/tracecode-toolkit][nexB/tracecode-toolkit]] or [[https://github.com/nexB/tracecode-toolkit-strace][nexB/tracecode-toolkit-strace]]
+**** TODO
+
 *** [[https://github.com/bmwcarit/stracepy/tree/master][bmwcarit/stracepy]]
-Containes a utility called ~strace2csv~ which takes an strace log and generates a csv of the form:
+Containes a utility called ~strace2csv~ which takes an strace log and generates a csv with the header:
+ - timestamp
+ - pid
+ - executable
+ - syscall
+ - filepath
+ - all_filepaths
+ - ret_int
+ - ret_str
+ - syscall_time
 
-
-│ timestamp | pid | executable | syscall | filepath | all_filepaths | ret_int | ret_str | syscall_time |
-|----+----|
-│ 18:09:46.648943 | 29020 | /usr/bin/make | execve | /usr/bin/make | ['/usr/bin/make'] | 0 |  | 0.000143 |
-│ 18:09:46.649207 | 29020 | /usr/bin/make | brk |  | [] | 0 | x5648b07cd000 | 0.000006 |
-│ 18:09:46.649272 | 29020 | /usr/bin/make | mmap |  | [] | 0 | x7ff1e4d8f000 | 0.000009 |
-│ 18:09:46.649307 | 29020 | /usr/bin/make | access | /etc/ld.so.preload | ['/etc/ld.so.preload'] | -1 | ENOENT (No such file or directory) | 0.000008 |
-│ 18:09:46.649347 | 29020 | /usr/bin/make | openat | /src | ['/src' |  '/etc/ld.so.cache' |  '/etc/ld.so.cache'] | 3 | </etc/ld.so.cache> | 0.000013 |
-│ 18:09:46.649453 | 29020 | /usr/bin/make | newfstatat | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 |  | 0.000008 |
-│ 18:09:46.649506 | 29020 | /usr/bin/make | mmap | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 | x7ff1e4d89000 | 0.000011 |
-│ 18:09:46.649542 | 29020 | /usr/bin/make | close | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 |  | 0.000019 |
-| ... | ... | ... | ... | ... | ... | ... | ... | ... |
+**** TODO
 
 *** https://github.com/mgedmin/strace-process-tree
+
+**** TODO
 
 ** highjacking comand calls
 *** [[https://github.com/rizsotto/Bear][Bear]]
@@ -70,15 +72,24 @@ This generates a JSON file like:
 ]
 #+END_SRC
 
+**** TODO
+
 ** Log output analysis
 *** Verbose log
 Running ~make V=1~
+**** TODO
+
 *** Debug log
 Runnign ~make -d~.
+**** TODO
+
 *** [[https://github.com/lindenb/makefile2graph][makefile2graph]]
 relies on output of ~make -Bnd~.
 Has [[https://github.com/lindenb/makefile2graph/issues/17][no support for sub-Makefiles]]. 
 
+**** TODO
+
 
 ** Make alternatives
 *** [[https://bashdb.sourceforge.net/remake/remake.html/index.html][remake]]
+**** TODO
