@@ -4,7 +4,7 @@ this repo tries to find a way to statically or dynamically analyze builds done w
 
 ** Analysis via strace
 *** [[https://github.com/nexB/tracecode-toolkit][nexB/tracecode-toolkit]] or [[https://github.com/nexB/tracecode-toolkit-strace][nexB/tracecode-toolkit-strace]]
-**** TODO
+**** TODO:
 
 *** [[https://github.com/bmwcarit/stracepy/tree/master][bmwcarit/stracepy]]
 Containes a utility called ~strace2csv~ which takes an strace log and generates a csv with the header:
@@ -18,11 +18,11 @@ Containes a utility called ~strace2csv~ which takes an strace log and generates 
  - ret_str
  - syscall_time
 
-**** TODO
+**** TODO:
 
 *** https://github.com/mgedmin/strace-process-tree
 
-**** TODO
+**** TODO:
 
 ** highjacking comand calls
 *** [[https://github.com/rizsotto/Bear][Bear]]
@@ -72,24 +72,22 @@ This generates a JSON file like:
 ]
 #+END_SRC
 
-**** TODO
+**** TODO:
 
 ** Log output analysis
 *** Verbose log
 Running ~make V=1~
-**** TODO
+**** TODO:
 
 *** Debug log
 Runnign ~make -d~.
-**** TODO
+**** TODO:
 
 *** [[https://github.com/lindenb/makefile2graph][makefile2graph]]
 relies on output of ~make -Bnd~.
 Has [[https://github.com/lindenb/makefile2graph/issues/17][no support for sub-Makefiles]]. 
-
-**** TODO
-
+**** TODO:
 
 ** Make alternatives
 *** [[https://bashdb.sourceforge.net/remake/remake.html/index.html][remake]]
-**** TODO
+**** TODO:
