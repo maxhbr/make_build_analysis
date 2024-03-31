@@ -78,6 +78,10 @@ This generates a JSON file like:
 
 **** TODO:
 
+*** [[https://github.com/QMSTR/qmstr][QMSTR]]
+
+**** TODO:
+
 ** Log output analysis
 *** Verbose log
 Running ~make V=1~
