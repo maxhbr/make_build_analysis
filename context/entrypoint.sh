@@ -34,7 +34,7 @@ _expected_out() {
 run_verbose_build() {
   if _expected_out $out/make.log; then
     find $src > $out/find.clean
-    make V=1 -j$(nproc) $target | tee $out/make.log
+    make V=1 -j$(nproc) $target 2>&1 | tee $out/make.log
     find $src > $out/find.build
   fi
 }
@@ -66,6 +66,7 @@ run_strace2csv() {
 
 run_tracecode() {
   if _expected_out $out/ts-parsed/; then
+    mkdir -p "$out/ts"
     strace \
           -ff `# trace each process and children in a separate trace file` \
           -y `# decode file descs` \
@@ -76,19 +77,22 @@ run_tracecode() {
           -o "$out/ts/t" \
           make -j$(nproc) $target
     mkdir -p $out/ts-parsed/
-    tracecode parse $out/ts/ $out/ts-parsed/
-    #tracecode analyze $out/ts-parsed/ $out/ts-parsed.analyze
-    tracecode inventory $out/ts-parsed/ $out/ts-parsed.inventory
-    tracecode graphic $out/ts-parsed/ $out/ts-parsed.graphic
+    (
+      set -x
+      tracecode parse $out/ts/ $out/ts-parsed/
+      #tracecode analyze $out/ts-parsed/ $out/ts-parsed.analyze
+      tracecode inventory $out/ts-parsed/ $out/ts-parsed.inventory
+      tracecode graphic $out/ts-parsed/ $out/ts-parsed.graphic
+    )
   fi
 }
 
 run_all() {
-  run_verbose_build
-  run_make2graph
-  run_bear
-  run_strace2csv
-  run_tracecode
+  run_verbose_build || ( echo "verbose_build failed" | tee -a "$out/failed_runs.log" )
+  run_make2graph || ( echo "make2graph failed" | tee -a "$out/failed_runs.log" )
+  run_bear || ( echo "bear failed" | tee -a "$out/failed_runs.log" )
+  run_strace2csv || ( echo "strace2csv failed" | tee -a "$out/failed_runs.log" )
+  run_tracecode || ( echo "tracecode failed" | tee -a "$out/failed_runs.log" )
 }
 
 _configure

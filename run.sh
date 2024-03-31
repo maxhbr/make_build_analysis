@@ -68,7 +68,7 @@ case "$1" in
     SRC=hello-2.12
     TXZ=${SRC}.tar.gz
     URL=https://ftp.gnu.org/gnu/hello/${TXZ}
-    TARGET=hello
+    TARGET=
     ;;
   *)
     echo "Usage: $0 {kernel|hello}"

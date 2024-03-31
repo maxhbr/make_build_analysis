@@ -15,8 +15,7 @@ RUN set -x \
       graphviz \
       bear jq \
       moreutils \
-      texinfo \
-      gperf \
+      texinfo gperf libunistring-dev debhelper-compat help2man coreutils \
  && rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/opt/venv
