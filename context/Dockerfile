@@ -45,6 +45,7 @@ RUN set -x \
 ADD entrypoint.sh /entrypoint.sh
 RUN set -x \
  && chmod +x /entrypoint.sh
-ENTRYPOINT /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
 
 WORKDIR /src
+CMD [ "all" ]

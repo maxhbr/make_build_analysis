@@ -4,6 +4,10 @@ this repo tries to find a way to statically or dynamically analyze builds done w
 
 ** Analysis via strace
 *** [[https://github.com/nexB/tracecode-toolkit][nexB/tracecode-toolkit]] or [[https://github.com/nexB/tracecode-toolkit-strace][nexB/tracecode-toolkit-strace]]
+
+- ~tracecode parse~: Parses strace output and generates pickle files.
+- ~tracecdoe list~: Collect the inventory of files processed during the tracing
+- ~tracecode graphic~: generate a dot graph out of the build
 **** TODO:
 
 *** [[https://github.com/bmwcarit/stracepy/tree/master][bmwcarit/stracepy]]

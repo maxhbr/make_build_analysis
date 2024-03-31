@@ -2,17 +2,28 @@
 
 set -euo pipefail
 
-in="${1:-/src}"
-out="${2:-/out}"
+src="/src"
+out="/out"
+target="$1"
+shift
 
-cd "$in"
+cd "$src"
 
-make defconfig || ./configure 
+_configure() {
+  echo "configure..."
+  { 
+    make defconfig || ./configure 
+  } &> /out/configure.log
+}
 
 _expected_out() {
   local expected_out="$1"
+  echo "####################################################################################"
+  echo "####################################################################################"
+  echo "####################################################################################"
   if [[ ! -f $expected_out || -d $expected_out ]]; then
-    make clean
+    echo "make clean..."
+    make clean &>/dev/null
     echo "start working on $expected_out ..."
   else
     echo "file $expected_out already exists"
@@ -23,14 +34,14 @@ _expected_out() {
 run_verbose_build() {
   if _expected_out $out/make.log; then
     find $src > $out/find.clean
-    make V=1 -j$(nproc) | tee $out/make.log
+    make V=1 -j$(nproc) $target | tee $out/make.log
     find $src > $out/find.build
   fi
 }
 
 run_make2graph() {
   if _expected_out $out/make.Bnd.log; then
-    make -Bnd | tee $out/make.Bnd.log
+    make -Bnd $target | tee $out/make.Bnd.log
     cat $out/make.Bnd.log | make2graph > $out/make.Bnd.dot
     cat $out/make.Bnd.log | make2graph --format x > $out/make.Bnd.xml
   fi
@@ -39,17 +50,17 @@ run_make2graph() {
 run_bear() {
   if _expected_out $out/bear.json; then
     bear --output $out/bear.json -- \
-      make -j$(nproc)
+      make -j$(nproc) $target
     cat $out/bear.json | jq -r '.[] | [ .file, .output] | @csv' > $out/bear.json.csv
   fi
 }
 
 run_strace2csv() {
-  if _expected_out $out/t.log.csv; then
-    strace -f -tt -T -y -yy -s 2048 -o $out/t.log \
-          make -j$(nproc)
-    wc -l $out/t.log
-    strace2csv --verbose 1 $out/t.log --out $out/t.log.csv
+  if _expected_out $out/strace.log.csv; then
+    strace -f -tt -T -y -yy -s 2048 -o $out/strace.log \
+          make -j$(nproc) $target
+    wc -l $out/strace.log
+    strace2csv --verbose 1 $out/strace.log --out $out/strace.log.csv
   fi
 }
 
@@ -63,7 +74,7 @@ run_tracecode() {
           -a1 `# no alignment for results codes` \
           -qq `# suppress process exit messages` \
           -o "$out/ts/t" \
-          make -j$(nproc)
+          make -j$(nproc) $target
     mkdir -p $out/ts-parsed/
     tracecode parse $out/ts/ $out/ts-parsed/
     #tracecode analyze $out/ts-parsed/ $out/ts-parsed.analyze
@@ -80,6 +91,7 @@ run_all() {
   run_tracecode
 }
 
+_configure
 case "${1:-all}" in
   "build")
     run_verbose_build

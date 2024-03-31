@@ -36,7 +36,7 @@ run() {
     -v "$(readlink -f "${SRC}")":/src \
     -v "${workdir}":/out \
     kernel-builder \
-    "$@"
+    "$@" | tee -a "$workdir/run.log"
 }
 
 run_interactive() {
@@ -61,12 +61,14 @@ case "$1" in
     SRC=linux-${KERNEL_VERSION}
     TXZ=${SRC}.tar.xz
     URL=https://cdn.kernel.org/pub/linux/kernel/v6.x/${TXZ}
+    TARGET=
     ;;
   hello)
     shift
     SRC=hello-2.12
     TXZ=${SRC}.tar.gz
     URL=https://ftp.gnu.org/gnu/hello/${TXZ}
+    TARGET=hello
     ;;
   *)
     echo "Usage: $0 {kernel|hello}"
@@ -86,5 +88,5 @@ get_sources "$workdir" "$SRC" "$TXZ" "$URL"
 if [[ "$#" -ge 1 && "$1" == bash ]]; then
   run_interactive "$workdir" "$SRC"
 else
-  run "$workdir" "$SRC" "$@"
+  run "$workdir" "$SRC" "$TARGET" "$@"
 fi
