@@ -4,9 +4,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-build_img() {
+build_img() (
+  cd context
   podman build -t kernel-builder .
-}
+)
 
 get_sources() {
   local workdir="$1"
@@ -25,9 +26,17 @@ get_sources() {
 run() {
   local workdir="$1"
   local SRC="$2"
+  shift
+  shift
 
   set -x
-  podman run -it --rm -v "$(readlink -f "${SRC}")":/src -v "${workdir}":/out kernel-builder
+  podman run \
+    -it \
+    --rm \
+    -v "$(readlink -f "${SRC}")":/src \
+    -v "${workdir}":/out \
+    kernel-builder \
+    "$@"
 }
 
 run_interactive() {
@@ -35,7 +44,14 @@ run_interactive() {
   local SRC="$2"
 
   set -x
-  podman run -it --rm -v "$(readlink -f "${SRC}")":/src -v "${workdir}":/out kernel-builder bash
+  podman run \
+    -it \
+    --rm \
+    -v "$(readlink -f "${SRC}")":/src \
+    -v "${workdir}":/out \
+    -entrypoint='' \
+    kernel-builder \
+    bash
 }
 
 case "$1" in
@@ -70,5 +86,5 @@ get_sources "$workdir" "$SRC" "$TXZ" "$URL"
 if [[ "$#" -ge 1 && "$1" == bash ]]; then
   run_interactive "$workdir" "$SRC"
 else
-  run "$workdir" "$SRC"
+  run "$workdir" "$SRC" "$@"
 fi

@@ -1,0 +1,84 @@
+* Analysis of Make builds
+
+this repo tries to find a way to statically or dynamically analyze builds done with make.
+
+** Analysis via strace
+*** [[https://github.com/nexB/tracecode-toolkit][nexB/tracecode-toolkit]] or [[https://github.com/nexB/tracecode-toolkit-strace][nexB/tracecode-toolkit-strace]]
+*** [[https://github.com/bmwcarit/stracepy/tree/master][bmwcarit/stracepy]]
+Containes a utility called ~strace2csv~ which takes an strace log and generates a csv of the form:
+
+
+│ timestamp | pid | executable | syscall | filepath | all_filepaths | ret_int | ret_str | syscall_time |
+|----+----|
+│ 18:09:46.648943 | 29020 | /usr/bin/make | execve | /usr/bin/make | ['/usr/bin/make'] | 0 |  | 0.000143 |
+│ 18:09:46.649207 | 29020 | /usr/bin/make | brk |  | [] | 0 | x5648b07cd000 | 0.000006 |
+│ 18:09:46.649272 | 29020 | /usr/bin/make | mmap |  | [] | 0 | x7ff1e4d8f000 | 0.000009 |
+│ 18:09:46.649307 | 29020 | /usr/bin/make | access | /etc/ld.so.preload | ['/etc/ld.so.preload'] | -1 | ENOENT (No such file or directory) | 0.000008 |
+│ 18:09:46.649347 | 29020 | /usr/bin/make | openat | /src | ['/src' |  '/etc/ld.so.cache' |  '/etc/ld.so.cache'] | 3 | </etc/ld.so.cache> | 0.000013 |
+│ 18:09:46.649453 | 29020 | /usr/bin/make | newfstatat | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 |  | 0.000008 |
+│ 18:09:46.649506 | 29020 | /usr/bin/make | mmap | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 | x7ff1e4d89000 | 0.000011 |
+│ 18:09:46.649542 | 29020 | /usr/bin/make | close | /etc/ld.so.cache | ['/etc/ld.so.cache'] | 0 |  | 0.000019 |
+| ... | ... | ... | ... | ... | ... | ... | ... | ... |
+
+*** https://github.com/mgedmin/strace-process-tree
+
+** highjacking comand calls
+*** [[https://github.com/rizsotto/Bear][Bear]]
+This generates a JSON file like:
+
+#+BEGIN_SRC
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-DLOCALEDIR=\"/usr/local/share/locale\"",
+      "-DHAVE_CONFIG_H",
+      "-I.",
+      "-Ilib",
+      "-I./lib",
+      "-Isrc",
+      "-I./src",
+      "-g",
+      "-O2",
+      "-c",
+      "-o",
+      "lib/getprogname.o",
+      "lib/getprogname.c"
+    ],
+    "directory": "/src",
+    "file": "/src/lib/getprogname.c",
+    "output": "/src/lib/getprogname.o"
+  },
+  {
+    "arguments": [ ... ],
+    "directory": "/src",
+    "file": "/src/lib/c-ctype.c",
+    "output": "/src/lib/c-ctype.o"
+  },
+  {
+    "arguments": [ ... ],
+    "directory": "/src",
+    "file": "/src/lib/c-strncasecmp.c",
+    "output": "/src/lib/c-strncasecmp.o"
+  },
+  {
+    "arguments": [ ... ],
+    "directory": "/src",
+    "file": "/src/lib/closeout.c",
+    "output": "/src/lib/closeout.o"
+  },
+  ...
+]
+#+END_SRC
+
+** Log output analysis
+*** Verbose log
+Running ~make V=1~
+*** Debug log
+Runnign ~make -d~.
+*** [[https://github.com/lindenb/makefile2graph][makefile2graph]]
+relies on output of ~make -Bnd~.
+Has [[https://github.com/lindenb/makefile2graph/issues/17][no support for sub-Makefiles]]. 
+
+
+** Make alternatives
+*** [[https://bashdb.sourceforge.net/remake/remake.html/index.html][remake]]
