@@ -14,5 +14,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
+    - name: prebuild the img
+      run: ./run.sh only-build-img
+    - name: run the script
       run: ./run.sh hello
+    - uses: actions/upload-artifact@v4
+      with:
+        name: out
+        path: ./wd-hello-2.12/

@@ -54,6 +54,11 @@ run_interactive() {
     bash
 }
 
+build_img
+if [[ "$#" -ge 1 && "$1" == only-build-img ]]; then
+  exit 0
+fi
+
 case "$1" in
   kernel)
     shift
@@ -75,8 +80,6 @@ case "$1" in
     exit 1
     ;;
 esac
-
-build_img
 
 
 workdir="$(pwd)/wd-${SRC}/"
