@@ -23,6 +23,8 @@ jobs:
             wd: wd-linux-6.8.2
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: 'true'
     - name: prebuild the img
       run: ./run.sh only-build-img
     - name: run the script
