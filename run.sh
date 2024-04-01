@@ -12,7 +12,7 @@ EOF
   exit 0
 fi
 
-docker="docker"
+docker="podman"
 
 cd "$(dirname "$0")"
 
@@ -44,7 +44,6 @@ run() {
   set -x
   $docker run \
     -it \
-    --privileged \
     --rm \
     -v "$(readlink -f "${SRC}")":/src \
     -v "${workdir}":/out \
