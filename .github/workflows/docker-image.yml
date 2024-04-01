@@ -14,8 +14,8 @@ jobs:
     
     strategy:
       matrix:
-        sample: [hello, kernel]
-        wd: [wd-hello-2.12, wd-linux-6.8.2]
+        # sample: [hello, kernel]
+        # wd: [wd-hello-2.12, wd-linux-6.8.2]
         include:
           - sample: hello
             wd: wd-hello-2.12
