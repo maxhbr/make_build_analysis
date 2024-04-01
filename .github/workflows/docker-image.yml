@@ -11,14 +11,23 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
+    strategy:
+      matrix:
+        sample: [hello, kernel]
+        wd: [wd-hello-2.12, wd-linux-6.8.2]
+        include:
+          - sample: hello
+            wd: wd-hello-2.12
+          - sample: kernel
+            wd: wd-linux-6.8.2
     steps:
     - uses: actions/checkout@v3
     - name: prebuild the img
       run: ./run.sh only-build-img
     - name: run the script
-      run: ./run.sh hello
+      run: ./run.sh ${{ matrix.sample }}
     - uses: actions/upload-artifact@v4
       with:
-        name: out
-        path: ./wd-hello-2.12/
+        name: ${{ matrix.wd }}
+        path: ${{ matrix.wd }}

@@ -12,11 +12,13 @@ EOF
   exit 0
 fi
 
+docker="docker"
+
 cd "$(dirname "$0")"
 
 build_img() (
   cd context
-  podman build -t kernel-builder .
+  $docker build -t kernel-builder .
 )
 
 get_sources() {
@@ -40,7 +42,7 @@ run() {
   shift
 
   set -x
-  podman run \
+  $docker run \
     -it \
     --privileged \
     --rm \
@@ -55,7 +57,7 @@ run_interactive() {
   local SRC="$2"
 
   set -x
-  podman run \
+  $docker run \
     -it \
     --rm \
     -v "$(readlink -f "${SRC}")":/src \
