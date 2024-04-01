@@ -16,6 +16,7 @@ RUN set -x \
       bear jq \
       moreutils \
       texinfo gperf libunistring-dev debhelper-compat help2man coreutils \
+      bpftrace \
  && rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/opt/venv
@@ -39,11 +40,12 @@ RUN set -x \
  && make \
  && make install
 
-# ENV VERBOSE=1
-
+ADD ./gregkh-linux/scripts/trace_kernel_build.sh /trace_kernel_build.sh
 ADD entrypoint.sh /entrypoint.sh
 RUN set -x \
- && chmod +x /entrypoint.sh
+ && chmod +x /entrypoint.sh \
+ && chmod +x /trace_kernel_build.sh \
+ && ulimit -l 8192
 ENTRYPOINT [ "/entrypoint.sh" ]
 
 WORKDIR /src

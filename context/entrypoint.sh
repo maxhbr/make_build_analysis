@@ -87,12 +87,23 @@ run_tracecode() {
   fi
 }
 
+run_gregkh_scripts() {
+  if _expected_out $out/touched_files.txt; then
+    /trace_kernel_build.sh \
+      --make="make -j$(nproc) $target" \
+      --kernel_dir=/src \
+      --file_list=$out/touched_files.txt \
+      --count | tee $out/touched_files.txt.log 
+  fi
+}
+
 run_all() {
   run_verbose_build || ( echo "verbose_build failed" | tee -a "$out/failed_runs.log" )
   run_make2graph || ( echo "make2graph failed" | tee -a "$out/failed_runs.log" )
   run_bear || ( echo "bear failed" | tee -a "$out/failed_runs.log" )
   run_strace2csv || ( echo "strace2csv failed" | tee -a "$out/failed_runs.log" )
   run_tracecode || ( echo "tracecode failed" | tee -a "$out/failed_runs.log" )
+  # run_gregkh_scripts || ( echo "gregkh_scripts failed" | tee -a "$out/failed_runs.log" )
 }
 
 _configure
@@ -111,6 +122,9 @@ case "${1:-all}" in
     ;;
   "tracecode")
     run_tracecode
+    ;;
+  "gregkh_scripts")
+    run_gregkh_scripts
     ;;
   *)
     run_all

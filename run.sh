@@ -2,6 +2,16 @@
 
 set -euo pipefail
 
+if [[ "$#" -ge 1 && "$1" == --help ]]; then
+  cat <<EOF
+Usage:
+  $0 {kernel|hello} [bash]"
+  $0 only-build-img
+  $0 --help
+EOF
+  exit 0
+fi
+
 cd "$(dirname "$0")"
 
 build_img() (
@@ -32,6 +42,7 @@ run() {
   set -x
   podman run \
     -it \
+    --privileged \
     --rm \
     -v "$(readlink -f "${SRC}")":/src \
     -v "${workdir}":/out \
